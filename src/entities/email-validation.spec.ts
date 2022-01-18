@@ -26,6 +26,11 @@ describe('Email validation', () => {
 		expect(Email.validate(email)).toBeFalsy();
 	});
 
+	test('should not accept local part with invalid char', () => {
+		const email = 'in valid@email.com';
+		expect(Email.validate(email)).toBeFalsy();
+	});
+
 	test('should not accept domain larger than 190 chars', () => {
 		const email = 'l'.repeat(64) + '@' + 'd'.repeat(191); // one more char than acceptable
 		expect(Email.validate(email)).toBeFalsy();
