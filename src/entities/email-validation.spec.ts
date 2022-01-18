@@ -21,8 +21,13 @@ describe('Email validation', () => {
 		expect(Email.validate(email)).toBeFalsy();
 	});
 
+	test('should not accept domain larger than 191 chars', () => {
+		const email = 'l'.repeat(64) + 'd'.repeat(192); // one more char than acceptable
+		expect(Email.validate(email)).toBeFalsy();
+	});
+
 	test('should not accept email larger than 256 chars', () => {
-		const email = 'l'.repeat(64) + '@' + 'd'.repeat(192); // one char more than acceptable
+		const email = 'e'.repeat(257); // one more char than acceptable
 		expect(Email.validate(email)).toBeFalsy();
 	});
 });
