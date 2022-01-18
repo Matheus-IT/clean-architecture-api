@@ -20,4 +20,9 @@ describe('Email validation', () => {
 		const email = 'l'.repeat(65) + '@mail.com';
 		expect(Email.validate(email)).toBeFalsy();
 	});
+
+	test('should not accept email larger than 256 chars', () => {
+		const email = 'l'.repeat(64) + '@' + 'd'.repeat(192); // one char more than acceptable
+		expect(Email.validate(email)).toBeFalsy();
+	});
 });
