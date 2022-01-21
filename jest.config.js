@@ -3,13 +3,14 @@
  * https://jestjs.io/docs/configuration
  */
 
-module.exports = {
-  roots: ['<rootDir>/src'],
-  // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
-  testEnvironment: 'node',
-  transform: {
-    '.+\\.ts$': 'ts-jest'
-  }
+export const roots = ['<rootDir>/src'];
+export const coverageDirectory = 'coverage';
+export const collectCoverageFrom = [
+	'<rootDir>/src/**/*.ts',
+	'!**/test/**',
+	'!**/config/**'
+];
+export const testEnvironment = 'node';
+export const transform = {
+	'.+\\.ts$': 'ts-jest'
 };
