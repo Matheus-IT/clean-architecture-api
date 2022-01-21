@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
-const config = {
+module.exports = {
 	roots: ['<rootDir>/src'],
 	// The directory where Jest should output its coverage files
 	coverageDirectory: 'coverage',
@@ -17,5 +17,3 @@ const config = {
 		'.+\\.ts$': 'ts-jest'
 	}
 };
-
-export default config;
