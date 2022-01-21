@@ -4,7 +4,12 @@
   "description": "Project built to learn clean architecture with nodejs and typescript",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --silent --noStackTrace --runInBand",
+    "test-verbose": "jest --runInBand",
+    "test-unit": "npm test -- --watch -c jest-unit-config.js",
+    "test-integration": "npm test -- --watch -c jest-integration-config.js",
+    "test-staged": "npm test -- --findRelatedTests",
+    "test-ci": "npm test -- --coverage"
   },
   "repository": {
     "type": "git",
