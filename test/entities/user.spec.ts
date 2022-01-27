@@ -12,13 +12,14 @@ describe('User domain entity', () => {
 		const invalidName = 'M           ';
 		const error = User.create({ name: invalidName, email: 'test@email.com' }).value as Error;
 		expect(error.name).toEqual('InvalidNameError');
+		expect(error.message).toEqual('Invalid name: ' + invalidName + '.');
 	});
 
-	// test('should not create user with invalid name (too many characters)', () => {
-	// 	const invalidName = 'M'.repeat(257);
-	// 	const error = User.create({ name: invalidName, email: 'test@email.com' });
-	// 	expect(error).toEqual(left(new InvalidNameError()));
-	// });
+	test('should not create user with invalid name (too many characters)', () => {
+		const invalidName = 'M'.repeat(257);
+		const error = User.create({ name: invalidName, email: 'test@email.com' }).value as Error;
+		expect(error.name).toEqual('InvalidNameError');
+	});
 
 	test('should create user with valid data', () => {
 		const validUserData = { name: 'test_name', email: 'test@test.com' };
