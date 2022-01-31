@@ -15,7 +15,8 @@ describe('Register user web controller', () => {
 	const controller: RegisterUserController = new RegisterUserController(usecase);
 
 	class ErrorThrowingUseCaseStub implements UseCase {
-		perform(request: any): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		perform(request: never): Promise<void> {
 			throw Error();
 		}
 	}
