@@ -29,7 +29,7 @@ describe('Register user web controller', () => {
 	test('should return status code 400 when request contains invalid name', async () => {
 		const requestWithInvalidName: HttpRequest = {
 			body: {
-				name: '',
+				name: 'M             ',
 				email: 'test@email.com',
 			},
 		};
@@ -60,5 +60,57 @@ describe('Register user web controller', () => {
 		const response: HttpResponse = await controller.handle(requestWithInvalidEmail);
 		expect(response.statusCode).toEqual(400);
 		expect(response.body).toBeInstanceOf(InvalidEmailError);
+	});
+
+	test('should return status code 400 when request is missing username', async () => {
+		const requestWithoutName: HttpRequest = {
+			body: {
+				email: 'test@mail.br',
+			},
+		};
+
+		const users: UserData[] = [];
+		const repo: UserRepository = new InMemoryUserRepository(users);
+		const usecase = new RegisterUserOnMailingList(repo);
+		const controller = new RegisterUserController(usecase);
+
+		const response: HttpResponse = await controller.handle(requestWithoutName);
+		expect(response.statusCode).toEqual(400);
+		expect(response.body).toBeInstanceOf(MissingParamError);
+		expect((response.body as Error).message).toEqual('Missing parameter from request: name.');
+	});
+
+	test('should return status code 400 when request is missing email', async () => {
+		const requestWithoutEmail: HttpRequest = {
+			body: {
+				name: 'someone',
+			},
+		};
+
+		const users: UserData[] = [];
+		const repo: UserRepository = new InMemoryUserRepository(users);
+		const usecase = new RegisterUserOnMailingList(repo);
+		const controller = new RegisterUserController(usecase);
+
+		const response: HttpResponse = await controller.handle(requestWithoutEmail);
+		expect(response.statusCode).toEqual(400);
+		expect(response.body).toBeInstanceOf(MissingParamError);
+		expect((response.body as Error).message).toEqual('Missing parameter from request: email.');
+	});
+
+	test('should return status code 400 when request is missing name and email', async () => {
+		const requestWithoutBody: HttpRequest = {
+			body: {},
+		};
+
+		const users: UserData[] = [];
+		const repo: UserRepository = new InMemoryUserRepository(users);
+		const usecase = new RegisterUserOnMailingList(repo);
+		const controller = new RegisterUserController(usecase);
+
+		const response: HttpResponse = await controller.handle(requestWithoutBody);
+		expect(response.statusCode).toEqual(400);
+		expect(response.body).toBeInstanceOf(MissingParamError);
+		expect((response.body as Error).message).toEqual('Missing parameter from request: name and email.');
 	});
 });
