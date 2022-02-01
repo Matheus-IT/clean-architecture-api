@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/Matheus-IT/the-wise-pad#readme",
   "dependencies": {
+    "@types/express": "^4.17.13",
+    "express": "^4.17.2",
     "git-commit-msg-linter": "^3.2.8"
   },
   "devDependencies": {
