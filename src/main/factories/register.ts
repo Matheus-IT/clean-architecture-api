@@ -1,6 +1,6 @@
 import { RegisterUserOnMailingList } from '@/usecases/register-user-on-mailing-list';
 import { RegisterUserController } from '@/web-controllers';
-import { InMemoryUserRepository } from '@test/usecases/register-user-on-mailing-list/repository';
+import { InMemoryUserRepository } from '@/usecases/repository';
 
 export const makeRegisterUserController = (): RegisterUserController => {
 	const inMemoryRepository = new InMemoryUserRepository([]);
