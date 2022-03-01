@@ -37,6 +37,7 @@ class MailServiceStub implements EmailService {
 }
 
 class MailServiceErrorStub implements EmailService {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async send(emailOptions: EmailOptions): Promise<Either<MailServiceError, EmailOptions>> {
 		return left(new MailServiceError());
 	}
