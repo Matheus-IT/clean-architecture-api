@@ -1,4 +1,5 @@
 import { User, UserData } from '@/entities';
+import { InvalidEmailError } from '@/entities/errors';
 import { Either, right } from '@/shared';
 import { MailServiceError } from '@/usecases/errors';
 import { RegisterAndSendEmail } from '@/usecases/register-and-send-email';
@@ -66,5 +67,44 @@ describe('Register and send email to user', () => {
 		expect(res.name.value).toBe('test name');
 		expect(mailServiceMock.timesSendWasCalled).toEqual(1);
 		expect(res.name.value).toEqual('test name');
+	});
+
+	test('should not add user with invalid email', async () => {
+		// Register usecase
+		const users: UserData[] = [];
+		const repo: UserRepository = new InMemoryUserRepository(users);
+		const registerUsecase: RegisterUserOnMailingList = new RegisterUserOnMailingList(repo);
+
+		// Send email
+		const mailServiceMock = new MailServiceMock();
+		const sendEmailUsecase = new SendEmail(mailOptions, mailServiceMock);
+
+		// Combined register and send
+		const registerAndSendEmailUseCase = new RegisterAndSendEmail(registerUsecase, sendEmailUsecase);
+
+		const invalidEmail = 'invalid@com';
+		const res = (await registerAndSendEmailUseCase.perform({ name: 'test name', email: invalidEmail })).value as User;
+
+		expect(res.name).toEqual('InvalidEmailError');
+	});
+
+	test('should not add user with invalid name', async () => {
+		// Register usecase
+		const users: UserData[] = [];
+		const repo: UserRepository = new InMemoryUserRepository(users);
+		const registerUsecase: RegisterUserOnMailingList = new RegisterUserOnMailingList(repo);
+
+		// Send email
+		const mailServiceMock = new MailServiceMock();
+		const sendEmailUsecase = new SendEmail(mailOptions, mailServiceMock);
+
+		// Combined register and send
+		const registerAndSendEmailUseCase = new RegisterAndSendEmail(registerUsecase, sendEmailUsecase);
+
+		const invalidName = 'a';
+		const res = (await registerAndSendEmailUseCase.perform({ name: invalidName, email: 'test@mail.com' }))
+			.value as User;
+
+		expect(res.name).toEqual('InvalidNameError');
 	});
 });
