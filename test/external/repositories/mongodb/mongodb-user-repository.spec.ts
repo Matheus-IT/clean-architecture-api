@@ -11,7 +11,7 @@ describe('Mongodb user repository', () => {
 	});
 
 	beforeEach(async () => {
-		MongoHelper.clearCollection('users');
+		await MongoHelper.clearCollection('users');
 	});
 
 	test('user should be added', async () => {
