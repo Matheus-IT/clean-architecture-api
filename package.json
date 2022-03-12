@@ -28,7 +28,8 @@
     "express": "^4.17.2",
     "git-commit-msg-linter": "^3.2.8",
     "module-alias": "^2.2.2",
-    "mongodb": "^3.6.3"
+    "mongodb": "^3.6.3",
+    "nodemailer": "^6.7.2"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^2.2.0",
