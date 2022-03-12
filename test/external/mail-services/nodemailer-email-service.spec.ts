@@ -1,7 +1,6 @@
 import { NodemailerEmailService } from '@/external/mail-services';
 import { MailServiceError } from '@/usecases/errors';
 import { EmailOptions } from '@/usecases/send-email/ports';
-import { send } from 'process';
 
 const attachmentFilePath = '../resources/text.txt';
 const fromName = 'Test';
