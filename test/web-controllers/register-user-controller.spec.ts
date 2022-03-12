@@ -5,14 +5,60 @@ import { RegisterUserOnMailingList } from '@/usecases/register-user-on-mailing-l
 import { UserRepository } from '@/usecases/register-user-on-mailing-list/ports';
 import { MissingParamError } from '@/web-controllers/errors';
 import { HttpRequest, HttpResponse } from '@/web-controllers/ports';
-import { RegisterUserController } from '@/web-controllers/register-user-controller';
+import { RegisterAndSendEmailController } from '@/web-controllers/register-user-controller';
 import { InMemoryUserRepository } from '@/usecases/repository';
+import { EmailOptions, EmailService } from '@/usecases/send-email/ports';
+import { Either, right } from '@/shared';
+import { MailServiceError } from '@/usecases/errors';
+import { RegisterAndSendEmail } from '@/usecases/register-and-send-email';
+import { SendEmail } from '@/usecases/send-email';
+
+const attachmentFilePath = '../resources/text.txt';
+const fromName = 'Test';
+const fromEmail = 'from_email@email.com';
+const toName = 'any one';
+const toEmail = 'any_email@email.com';
+const subject = 'Test email';
+const emailBody = 'Hello wold attachment test';
+const emailBodyHtml = '<b>Hello world attachment testing</b>';
+const attachment = [
+	{
+		filename: attachmentFilePath,
+		contentType: 'text/plain',
+	},
+];
+const mailOptions: EmailOptions = {
+	host: 'test',
+	port: 867,
+	username: 'test',
+	password: 'test',
+	from: fromName + ' ' + fromEmail,
+	to: toName + '<' + toEmail + '>',
+	subject: subject,
+	text: emailBody,
+	html: emailBodyHtml,
+	attachments: attachment,
+};
+
+class MailServiceStub implements EmailService {
+	async send(emailOptions: EmailOptions): Promise<Either<MailServiceError, EmailOptions>> {
+		return right(emailOptions);
+	}
+}
 
 describe('Register user web controller', () => {
+	// Register usecase
 	const users: UserData[] = [];
 	const repo: UserRepository = new InMemoryUserRepository(users);
-	const usecase: UseCase = new RegisterUserOnMailingList(repo);
-	const controller: RegisterUserController = new RegisterUserController(usecase);
+	const registerUsecase: RegisterUserOnMailingList = new RegisterUserOnMailingList(repo);
+
+	// Send email
+	const mailServiceStub = new MailServiceStub();
+	const sendEmailUsecase = new SendEmail(mailOptions, mailServiceStub);
+
+	// Combined register and send
+	const registerAndSendEmailUseCase = new RegisterAndSendEmail(registerUsecase, sendEmailUsecase);
+	const controller: RegisterAndSendEmailController = new RegisterAndSendEmailController(registerAndSendEmailUseCase);
 
 	class ErrorThrowingUseCaseStub implements UseCase {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -106,7 +152,7 @@ describe('Register user web controller', () => {
 			},
 		};
 
-		const controller = new RegisterUserController(errorThrowingUseCaseStub);
+		const controller = new RegisterAndSendEmailController(errorThrowingUseCaseStub);
 		const response: HttpResponse = await controller.handle(request);
 		expect(response.statusCode).toEqual(500);
 		expect(response.body).toBeInstanceOf(Error);
