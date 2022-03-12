@@ -3,8 +3,8 @@ import { InvalidEmailError, InvalidNameError } from '@/entities/errors';
 import { Either, left, right } from '@/shared';
 import { RegisterUserOnMailingList } from '@/usecases/register-user-on-mailing-list';
 import { SendEmail } from '@/usecases/send-email';
-import { MailServiceError } from '../errors';
-import { UseCase } from '../ports';
+import { MailServiceError } from '@/usecases/errors';
+import { UseCase } from '@/usecases/ports';
 
 export class RegisterAndSendEmail implements UseCase {
 	private registerUser: RegisterUserOnMailingList;
