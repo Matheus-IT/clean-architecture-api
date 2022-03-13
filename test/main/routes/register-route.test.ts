@@ -20,6 +20,6 @@ describe('Register route', () => {
 			res.send();
 		});
 
-		await request(app).post('/api/register').send({ name: 'test name', email: 'test@email.com' }).expect(201);
+		await request(app).post('/api/register').send({ name: 'test name', email: 'test@email.com' }).expect(200), 20000;
 	});
 });
