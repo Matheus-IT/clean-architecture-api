@@ -2,13 +2,13 @@ import { EmailOptions } from '@/usecases/send-email/ports';
 
 const attachments = [
 	{
-		filename: 'text.txt',
-		path: '../../resources.txt',
+		filename: 'clean-architecture.pdf',
+		path: 'https://otaviolemos.github.io/clean-architecture.pdf',
 	},
 ];
 
 export function getEmailOptions(): EmailOptions {
-	const from = 'Otávio Lemos | theWiseDev <otaviolemos@thewisedev.com.br';
+	const from = process.env.EMAIL_USERNAME;
 	const to = '';
 	const mailOptions: EmailOptions = {
 		host: process.env.EMAIL_HOST,
